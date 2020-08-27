@@ -1,0 +1,31 @@
+# Problem statement is:
+
+What is the total number of viewers for shows on ABC?
+
+How to run this:
+Step :
+a) Clone repo
+b) Create diretory for input or choose address according to your choice:
+   ```
+   hdfs dfs -mkdir /user/hadoop/input
+   ```
+c) Put data files into hdfs using:
+   ```
+   hdfs dfs -put join2_genchanA.txt /user/hadoop/input
+   hdfs dfs -put join2_gennumA.txt /user/hadoop/input
+   ```
+d) Create a mapper and reducer.
+e) Call hadoop:
+   ```
+   hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+   -input /user/hadoop/input \
+   -output /user/hadoop/output \
+   -mapper join_mapper.py
+   -reducer join_reducer.py
+   ```
+  f) Download results if you want :
+     ```
+     hdfs dfs -getmerge /user/hadoop/output/* join_ABC.txt
+     ```
+  
+  Thank you 
