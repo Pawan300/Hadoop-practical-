@@ -1,1 +1,26 @@
+For running this word count practical:
+- Prerequisite - Hadoop , Python
 
+Steps : 
+a) Create a mapper.py
+b) Create a reducer.py
+c) Create input files
+d) Put those input files in the hdfs using 
+   ```
+   hdfs dfs -mkdir /user/hadoop/input
+   hdfs dfs -put demo1.txt /user/hadoop/input
+   ```
+e) Run hadoop :
+  ```
+  hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -input /user/hadoop/input \
+  -output /user/hadoop/output \
+  -mapper mapper.py \
+  -reduce reducer.py
+  ```
+ 
+ f) download results (optional)
+   ```
+   hdfs dfs -getmerge /user/hadoop/output/* result.txt
+   ```
+   
