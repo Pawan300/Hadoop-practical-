@@ -21,3 +21,4 @@ e) Run hadoop :
    hdfs dfs -getmerge /user/hadoop/output/* result.txt
    ```
    
+Thank you
