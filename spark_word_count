@@ -1,0 +1,50 @@
+In [1]: from pyspark import SparkContext
+In [1]: sc = SparkContext
+In [2]: text_RDD = sc.textFile("file:///home/cloudera/testfile1")
+In [3]: text_RDD.take(1)
+Out[3]: [u'A long time ago in a galaxy far far away']
+
+In [4]: def split_words(line):
+   ....:     return line.split()
+   ....: 
+
+In [5]: def create_pair(word):
+   ....:     return (word,1)
+   ....: 
+
+In [6]: pairs_RDD = text_RDD.flatMap(split_words).map(create_pair)
+
+In [7]: pairs_RDD
+Out[7]: PythonRDD[6] at RDD at PythonRDD.scala:42
+
+In [8]: pairs_RDD.collect()
+Out[8]: 
+[(u'A', 1),
+ (u'long', 1),
+ (u'time', 1),
+ (u'ago', 1),
+ (u'in', 1),
+ (u'a', 1),
+ (u'galaxy', 1),
+ (u'far', 1),
+ (u'far', 1),
+ (u'away', 1)]
+
+In [9]: def sum_count(a,b):
+   ....:     return a+b
+   ....: 
+
+In [10]: wordcounts_Rdd = pairs_RDD.reduceByKey(sum_count)
+
+In [11]: wordcounts_Rdd.collect()
+Out[11]: 
+[(u'A', 1),
+ (u'ago', 1),
+ (u'far', 2),
+ (u'away', 1),
+ (u'in', 1),
+ (u'long', 1),
+ (u'a', 1),
+ (u'time', 1),
+ (u'galaxy', 1)]
+
