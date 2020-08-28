@@ -1,19 +1,23 @@
-In [1]: joinA = sc.textFile("File:///home/cloudera/joinA.txt")
+In [1]: from pyspark import SparkContext
 
-In [2]: joinB = sc.textFile("File:///home/cloudera/joinB.txt")
+In [2]: sc = SparkContext()
 
-In [3]: # mapper for the file :
+In [3]: joinA = sc.textFile("File:///home/cloudera/joinA.txt")
 
-In [4]: def split_file(line):
-    key, value = line.split(",")
-    key = key.split()
-    if len(key)>=2: return key[1], key[0]+" "+value 
-    else: return key[0],int(value)
+In [4]: joinB = sc.textFile("File:///home/cloudera/joinB.txt")
 
-In [5]: mapper_joinB = joinB.map(split_file)
+In [5]: # mapper for the file :
 
-In [6]: mapper_joinB.collect()
-Out[6]: 
+In [6]: def split_file(line):
+    		key, value = line.split(",")
+    		key = key.split()
+    		if len(key)>=2: return key[1], key[0]+" "+value 
+    		else: return key[0],int(value)
+
+In [7]: mapper_joinB = joinB.map(split_file)
+
+In [8]: mapper_joinB.collect()
+Out[8]: 
 [(u'able', u'Jan-01 5'),
  (u'about', u'Feb-02 3'),
  (u'about', u'Mar-03 8'),
@@ -23,20 +27,20 @@ Out[6]:
  (u'burger', u'Mar-08 2'),
  (u'able', u'Dec-15 100')]
 
-In [7]: mapper_joinA = joinA.map(split_file)
+In [9]: mapper_joinA = joinA.map(split_file)
 
-In [7]: mapper_joinA.collect()
-Out[7]: 
+In [10]: mapper_joinA.collect()
+Out[10]: 
 [(u'able', 991),
  (u'about', 11),
  (u'burger', 15),
  (u'actor', 22),
  (u'about', 13)]
 
-In [8]: join_data = mapper_joinA.join(mapper_joinB)
+In [11]: join_data = mapper_joinA.join(mapper_joinB)
 
-In [9]: join_data.collect()
-Out[9]: 
+In [12]: join_data.collect()
+Out[12]: 
 [(u'about', (11, u'Feb-02 3')),
  (u'about', (11, u'Mar-03 8')),
  (u'about', (13, u'Feb-02 3')),

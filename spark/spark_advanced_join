@@ -1,64 +1,68 @@
 *** Problem ***
 => We want to find out the total number of viewers across all shows for the channels.
 
-In [1]: files = sc.textFile("input/join2_gennum?.txt")
+In [1]: from pyspark import SparkContext
 
-In [2]: files.take(2)
-Out[2]: [u'Hourly_Sports,21', u'PostModern_Show,38']
+In [2]: sc = SparkContext()
 
-In [3]: files_chan = sc.textFile("input/join2_genchan?.txt")
+In [3]: files = sc.textFile("input/join2_gennum?.txt")
 
-In [3]: files_chan.take(2)
-Out[3]: [u'Hourly_Sports,DEF', u'Baked_News,BAT']
+In [4]: files.take(2)
+Out[4]: [u'Hourly_Sports,21', u'PostModern_Show,38']
 
-In [4]: def split(line):                                    
+In [5]: files_chan = sc.textFile("input/join2_genchan?.txt")
+
+In [6]: files_chan.take(2)
+Out[6]: [u'Hourly_Sports,DEF', u'Baked_News,BAT']
+
+In [7]: def split(line):                                    
            line = line.split(",")
            if line[1].isalpha(): return line[0], line[1]
            else: return line[0], int(line[1])  
 
-In [5]: file_A = files.map(split1)
+In [8]: file_A = files.map(split1)
 
-In [6]: file_B = files_chan.map(split1)
+In [9]: file_B = files_chan.map(split1)
 
-In [7]: file_A.take(4)
-Out[7]: 
+In [10]: file_A.take(4)
+Out[10]: 
 [(u'Hourly_Sports', 21),
  (u'PostModern_Show', 38),
  (u'Surreal_News', 73),
  (u'Dumb_Cooking', 144)]
 
-In [8]: file_B.take(4)
-Out[8]: 
+In [11]: file_B.take(4)
+Out[11]: 
 [(u'Hourly_Sports', u'DEF'),
  (u'Baked_News', u'BAT'),
  (u'PostModern_Talking', u'XYZ'),
  (u'Loud_News', u'CNO')]
 
-In [9]: join_file = file_A.join(file_B)
+In [12]: join_file = file_A.join(file_B)
 
-In [9]: join_file.take(4)
-Out[9]: 
+In [13]: join_file.take(4)
+Out[13]: 
 [(u'PostModern_Cooking', (1038, u'DEF')),
  (u'PostModern_Cooking', (1038, u'CNO')),
  (u'PostModern_Cooking', (1038, u'CNO')),
  (u'PostModern_Cooking', (1038, u'NOX'))]
-In [10]: def  extract_views(line):
+In [14]: def  extract_views(line):
              channel = line[1][1]
              views = line[1][0]
              return channel, views
 
-In [11]: result = join_file.map(extract_views)
+In [15]: result = join_file.map(extract_views)
 
-In [12]: result.take(4)
-Out[12]: [(u'DEF', 1038), (u'CNO', 1038), (u'CNO', 1038), (u'NOX', 1038)]
+In [16]: result.take(4)
+Out[16]: [(u'DEF', 1038), (u'CNO', 1038), (u'CNO', 1038), (u'NOX', 1038)]
 
-In [13]: def sum(a,b):
+In [17]: def sum(a,b):
             return int(a)+ int(b) 
 
-In [14]: channel_views = result.reduceByKey(sum).collect()
+In [18]: channel_views = result.reduceByKey(sum).collect()
 
-In [15]: channel_views
-Out[15]: 
+In [19]: channel_views
+Out[19]: 
 [(u'XYZ', 5208016),
  (u'DEF', 8032799),
  (u'CNO', 3941177),
