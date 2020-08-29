@@ -1,0 +1,6 @@
+# This folder containing Machine learning files using spark
+
+Prerequisite
+- Pyspark
+- Hadoop for hdfs (Becasue spark doesn't have their own memory system)
+
