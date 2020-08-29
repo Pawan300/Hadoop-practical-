@@ -1,4 +1,4 @@
-In [1]: from pyspark import SparkContext
+In [3]: from pyspark import SparkContext
 In [1]: sc = SparkContext
 In [2]: text_RDD = sc.textFile("file:///home/cloudera/testfile1")
 In [3]: text_RDD.take(1)
